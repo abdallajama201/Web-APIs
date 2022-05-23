@@ -1,3 +1,5 @@
+// JavaScript file for 04-Web-APIs-Challenge
+// Variables to access html elements
 let scores = document.querySelector("#scores");
 let timer = document.querySelector("#timer");
 let container = document.querySelector("#container");
@@ -17,23 +19,43 @@ class Question {
 
 let questionList = [];
 
-// All Questions formatted and filled put into questionList array
+// All Questions formatted and put into questionList array
 const options1 = ["1. boolean", "2. object", "3. number", "4. string"];
 const question1 = new Question("What data types can local storage accept?", options1, "4. string");
 questionList.push(question1);
 
-const options2 = ["x", "x", "x", "x"];
-const question2 = new Question("x", options2, "string");
+const options2 = ["1. string", "2. number", "3. boolean", "4. all of the above"];
+const question2 = new Question("What data types can a function return?", options2, "4. all of the above");
 questionList.push(question2);
+
+const options3 = ["1. local variables", "2. css selectors", "3. functions", "4. names"];
+const question3 = new Question("What parameters can be passed into the query selector function?", options3, "2. css selectors");
+questionList.push(question3);
+
+const options4 = ["1. body", "2. canvas", "3. concept", "4. aside"];
+const question4 = new Question("Which of the following is not an HTML tag?", options4, "3. concept");
+questionList.push(question4);
+
+const options5 = ["1. add()", "2. push()", "3. concat()", "4. none of the above"];
+const question5 = new Question("Which of the following functions can add an element to the end of an array? ", options5, "2. push()");
+questionList.push(question5);
+
+const options6 = ["1. quotes", "2. curly braces", "3. parenthesis", "4. square braces"];
+const question6 = new Question("What syntax wraps around strings", options6, "1. quotes");
+questionList.push(question6);
 
 // Variables for question loop functions
 let optionList = [];
 let currentQues = 0;
 let score = 0;
+let timeLeft = 61;
 let isQuizOngoing = false;
-
 let leaderboard = [];
 let initials = "";
+let isClearingAnswer = false;
+let clearingAnswerCode = 0;
+let isCorrect = false;
+let invalidInputMess = "Initials must be entered and three characters or less";
 
 // Init function that makes view scores and start quiz clickable
 function init() {
@@ -43,6 +65,7 @@ function init() {
 
 // Makes elements before the quiz started invisible and creates option buttons
 function questionLoop () {
+    runTimer();
     isQuizOngoing = true;
     start.setAttribute("style", "display: none");
     content.setAttribute("style", "display: none");
@@ -55,11 +78,25 @@ function questionLoop () {
     nextQuestion();
 }
 
+// Counts down the timer and ends the quiz if time is zero
+function runTimer () {
+    let clock = setInterval(function() {
+        timeLeft--;
+        timer.textContent = `Time: ${timeLeft} seconds`;
+        if(timeLeft === 0) {
+            clearInterval(clock);
+            if(title.textContent !== "All Done.") {
+                endOfQuiz();
+            }
+        }
+    }, 1000)
+}
+
 
 // Checks if you are the last question
 // Either goes to next question or end of quiz
 function nextQuestion(event) {
-    isCorrect(event);
+    writeAnswer(event);
     if(currentQues < questionList.length) {
         changeQuestion();
     } else {
@@ -70,14 +107,45 @@ function nextQuestion(event) {
 
 // Checks if you are on the first question 
 // if not it checks the answer from the previous question is correct
-function isCorrect(event) {
+// if answer is incorrect time left is reduced and flashes red
+// Unless time left is less than ten then timer is set to zero
+function writeAnswer(event) {
     if(event !== undefined) {
         if(event.currentTarget.textContent === questionList[currentQues - 1].answer) {
+            isCorrect = true;
             answer.textContent = "Correct";
-            score += 5;
+            score += 10;
         } else {
+            isCorrect = false;
             answer.textContent = "Incorrect";
+            if(timeLeft > 10) {
+                timeLeft -= 10;
+            } else {
+                timeLeft = 1;
+            }
+            timer.setAttribute("style", "color: red");
+            setTimeout(function () {
+                timer.setAttribute("style", "color: black");
+            },1000);
         }
+        clearAnswer();
+    }
+}
+
+// Clears the the content in the footer after three seconds
+// Checks if a timeout has already been set
+// If it has it clears the previous timeout and calls itself
+function clearAnswer() {
+    if(isClearingAnswer) {
+        isClearingAnswer = false;
+        clearTimeout(clearingAnswerCode);
+        clearAnswer();
+    } else {
+        isClearingAnswer = true;
+        clearingAnswerCode = setTimeout(function() {
+            answer.textContent = "";
+            isClearingAnswer = false;
+        }, 3000);
     }
 }
 
@@ -96,18 +164,17 @@ function changeQuestion() {
 // Sets current question and score to zero and creates input fields
 function endOfQuiz() {
     title.textContent = "All Done.";
+    timeLeft = 1;
     clearOptions();
-    setTimeout(function () {answer.textContent = ""}, 3500);
+    clearAnswer();
     content.setAttribute("style", "display: visible");
     content.textContent = `Your final score is ${score}`;
-    currentQues = 0;
-    score = 0;
     inputFields();
 }
 
 //Removes option buttons and empties array they were in
 function clearOptions() {
-    for(let i = 0; i < questionList[0].options.length; i++) {
+    for(let i = 0; i < optionList.length; i++) {
         optionList[i].remove();
     }
     optionList = [];
@@ -129,7 +196,6 @@ function inputFields() {
     initialsForm.appendChild(submit);
     submit.setAttribute("id", "submit");
     submit.textContent = "Submit";
-    
     
     input.addEventListener("keydown", stopReload);
     submit.addEventListener("click", addScore);
@@ -168,7 +234,7 @@ function saveScore(id) {
     if(localStorage.getItem("leaderboard") !== null) {
         leaderboard = JSON.parse(localStorage.getItem("leaderboard"));
     }
-    leaderboard.push(id.value + ' ' + score);
+    leaderboard.push(`${score} ${id.value}`);
     localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
     showScores();    
 }
@@ -176,8 +242,8 @@ function saveScore(id) {
 // If an incorrect input is given a message is displayed
 // Sets the submit button to listen for click
 function invalidInput() {
-    answer.textContent = "Initials must be entered and three characters or less";
-    setTimeout(clearAnswer, 3500);
+    answer.textContent = invalidInputMess;
+    clearAnswer();
     let submit = document.getElementById("submit");
     submit.addEventListener("click", addScore);
 }
@@ -196,7 +262,8 @@ function showScores() {
 
 // Empties content box and formats for list
 // Chacks if any scores are stored
-// If there are they areput into an array
+// If there are they are put into an array
+// The array is sorted to display the top score
 // the contents of the array are printed through a loop
 function writeScores() {
     content.textContent = "";
@@ -204,13 +271,15 @@ function writeScores() {
     if(localStorage.getItem("leaderboard") !== null) {
         leaderboard = JSON.parse(localStorage.getItem("leaderboard"));
     }
+    leaderboard.sort();
+    leaderboard.reverse();
     for(let i = 0; i < leaderboard.length; i++) {
         content.textContent += leaderboard[i] + '\n';
     }
 }
 
 // Checks to see if the buttons have been created already
-// creates the buttons and sets listeners for a click
+// Creates the buttons and sets listeners for a click
 function createEndButtons() {
     if(!document.getElementById("restart")) {
         let restartVar = document.createElement("button");
@@ -230,13 +299,16 @@ function createEndButtons() {
 
 // Removes the current buttons on the screen
 // Sets the title and content to original
-// Makes start button visible and runs init function
+// Makes start button visible, resets variables and runs init function
 function restart() {
     document.getElementById("restart").remove();
     document.getElementById("clearScores").remove();
     title.textContent = "Coding Quiz Challenge";
-    content.textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your time by reducing it by ten seconds";
+    content.textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your time by reducing it by ten seconds.";
     start.setAttribute("style", "display: visible");
+    currentQues = 0;
+    score = 0;
+    timeLeft = 61;
     init();
 }
 
@@ -249,5 +321,3 @@ function clearScores() {
 }
 
 init();
-
-
