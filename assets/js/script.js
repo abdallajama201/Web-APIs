@@ -41,7 +41,7 @@ const question5 = new Question("Which of the following functions can add an elem
 questionList.push(question5);
 
 const options6 = ["1. quotes", "2. curly braces", "3. parenthesis", "4. square braces"];
-const question6 = new Question("What syntax wraps around strings", options6, "1. quotes");
+const question6 = new Question("What syntax wraps around strings?", options6, "1. quotes");
 questionList.push(question6);
 
 // Variables for question loop functions
@@ -270,7 +270,7 @@ function showScores() {
         answer.setAttribute("style", "color: black");
         clearAnswer();
     } else {
-        answer.textContent = "Cannot view scores until quiz is over";
+        answer.textContent = "Cannot view scores until the quiz is over";
         answer.setAttribute("style", "color: black");
         clearAnswer();
     }

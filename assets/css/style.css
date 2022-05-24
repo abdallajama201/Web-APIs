@@ -1,6 +1,7 @@
 * {
     font-family: Consolas, 'Andale Mono WT', 'Andale Mono', 'Lucida Console', 'Lucida Sans Typewriter', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Liberation Mono', 'Nimbus Mono L', Monaco, 'Courier New', Courier,
     monospace;
+    color: #272643;
 }
 
 header {
@@ -8,10 +9,11 @@ header {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
+    border-bottom: solid 10px #15A1E1;
 }
 
 header > *{
-    border: solid black 1px;
+    border: solid black 3px;
     border-radius: 20px;
     margin: 20px 5%;
     font-size: 150%;
@@ -19,8 +21,8 @@ header > *{
 }
 
 #container {
-    border: solid black 1px;
-    border-radius: 10px;
+    border: solid #243153 10px;
+    border-radius: 20px;
     margin: 50px 10% 20px;
     display: flex;
     flex-direction: column;
@@ -41,10 +43,13 @@ header > *{
 }
 
 button {
-    background-color: white;
-    border-radius: 10px;
+    background-color: #15A1E1;
+    color: white;
+    border: solid black 3px;
+    border-radius: 20px;
     padding: 15px 40px;
-    font-size: 110%;
+    font-size: 150%;
+    font-weight: bolder;
 }
 
 #button1, #button2, #button3, #button4, #restart, #clearScores {
@@ -53,11 +58,11 @@ button {
 }
 
 #form {
-    font-size: 110%;
+    font-size: 150%;
 }
 
 #submit {
-    align-self: center;
+    font-size: 100%;
     margin: 20px;
 }
 
@@ -67,7 +72,7 @@ footer {
 }
 
 button:hover {
-    box-shadow: inset 0px 0px 8px black, 0 0 15px black;
+    box-shadow: inset 0px 0px 0px, 0 0 15px #243153;
 }
 
 @media screen and (min-width: 768px){
