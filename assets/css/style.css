@@ -1,0 +1,96 @@
+* {
+    font-family: Consolas, 'Andale Mono WT', 'Andale Mono', 'Lucida Console', 'Lucida Sans Typewriter', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Liberation Mono', 'Nimbus Mono L', Monaco, 'Courier New', Courier,
+    monospace;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+header > *{
+    border: solid black 1px;
+    border-radius: 20px;
+    margin: 20px 5%;
+    font-size: 150%;
+    padding: 20px;
+}
+
+#container {
+    border: solid black 1px;
+    border-radius: 10px;
+    margin: 50px 10% 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+#container > * {
+    margin: 20px 5%;
+    align-self: center;
+}
+
+#title {
+    font-size: 175%;
+}
+
+#content {
+    font-size: 110%;
+    text-align: justify;
+}
+
+button {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px 40px;
+    font-size: 110%;
+}
+
+#button1, #button2, #button3, #button4, #restart, #clearScores {
+    align-self: start;
+
+}
+
+#form {
+    font-size: 110%;
+}
+
+#submit {
+    align-self: center;
+    margin: 20px;
+}
+
+footer {
+    text-align: center;
+    font-size: 150%;
+}
+
+button:hover {
+    box-shadow: inset 0px 0px 8px black, 0 0 15px black;
+}
+
+@media screen and (min-width: 768px){
+    header {
+        justify-content: space-between;
+    }
+    
+    #container {
+        margin: 100px 20% 20px;
+    }
+    #content {
+        text-align: left;
+    }
+}
+
+@media screen and (min-width: 992px){
+    header {
+        justify-content: space-between;
+    }
+    #container {
+        margin: 100px 30% 20px;
+    }
+    #content {
+        text-align: left;
+    }
+}

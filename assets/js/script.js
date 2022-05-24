@@ -55,7 +55,6 @@ let initials = "";
 let isClearingAnswer = false;
 let clearingAnswerCode = 0;
 let isCorrect = false;
-let invalidInputMess = "Initials must be entered and three characters or less";
 
 // Init function that makes view scores and start quiz clickable
 function init() {
@@ -74,6 +73,7 @@ function questionLoop () {
         let option = document.createElement("button");
         container.appendChild(option);
         optionList.push(option);
+        option.setAttribute("id", `button${i + 1}`);
     }
     nextQuestion();
 }
@@ -114,10 +114,12 @@ function writeAnswer(event) {
         if(event.currentTarget.textContent === questionList[currentQues - 1].answer) {
             isCorrect = true;
             answer.textContent = "Correct";
+            answer.setAttribute("style", "color: green");
             score += 10;
         } else {
             isCorrect = false;
             answer.textContent = "Incorrect";
+            answer.setAttribute("style", "color: red");
             if(timeLeft > 10) {
                 timeLeft -= 10;
             } else {
@@ -196,6 +198,10 @@ function inputFields() {
     initialsForm.appendChild(submit);
     submit.setAttribute("id", "submit");
     submit.textContent = "Submit";
+
+    title.setAttribute("style", "align-self: start")
+    content.setAttribute("style", "align-self: start; font-size: 150%");
+
     
     input.addEventListener("keydown", stopReload);
     submit.addEventListener("click", addScore);
@@ -242,13 +248,15 @@ function saveScore(id) {
 // If an incorrect input is given a message is displayed
 // Sets the submit button to listen for click
 function invalidInput() {
-    answer.textContent = invalidInputMess;
+    answer.textContent = "Initials must be entered and three characters or less";
+    answer.setAttribute("style", "color: black");
     clearAnswer();
     let submit = document.getElementById("submit");
     submit.addEventListener("click", addScore);
 }
 
 // Checks if quiz is ongoing to prevent being able to check scores during quiz
+// Displays a message is quiz is ongoing.
 // Changes title, writes scores and creates buttons for navigation
 function showScores() {
     if(!isQuizOngoing) {
@@ -257,6 +265,14 @@ function showScores() {
         start.setAttribute("style", "display: none");
         writeScores();
         createEndButtons();
+    } else if(title.textContent === "All Done.") {
+        answer.textContent = "Please enter your initials first";
+        answer.setAttribute("style", "color: black");
+        clearAnswer();
+    } else {
+        answer.textContent = "Cannot view scores until quiz is over";
+        answer.setAttribute("style", "color: black");
+        clearAnswer();
     }
 }
 
@@ -267,13 +283,17 @@ function showScores() {
 // the contents of the array are printed through a loop
 function writeScores() {
     content.textContent = "";
-    content.setAttribute("style", "white-space: pre-wrap");
+    content.setAttribute("style", "white-space: pre-wrap; font-size: 150%");
     if(localStorage.getItem("leaderboard") !== null) {
         leaderboard = JSON.parse(localStorage.getItem("leaderboard"));
     }
     leaderboard.sort();
     leaderboard.reverse();
-    for(let i = 0; i < leaderboard.length; i++) {
+    let limit = 11;
+    if(limit > leaderboard.length) {
+        limit = leaderboard.length;
+    }
+    for(let i = 0; i < limit; i++) {
         content.textContent += leaderboard[i] + '\n';
     }
 }
@@ -301,6 +321,8 @@ function createEndButtons() {
 // Sets the title and content to original
 // Makes start button visible, resets variables and runs init function
 function restart() {
+    title.setAttribute("style", "align-self: center");
+    content.setAttribute("style", "align-self: center; font-size: 110%");
     document.getElementById("restart").remove();
     document.getElementById("clearScores").remove();
     title.textContent = "Coding Quiz Challenge";
