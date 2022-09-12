@@ -1,4 +1,4 @@
-# 04 Web APIs Challenge: Code Quiz
+# Web APIs: Code Quiz
  
 ## Description
  
