@@ -8,7 +8,7 @@ The motivation behind creating this project is to help users become more profici
 
 ## Usage
  
-The website is live on the open web and can be accessed at https://abdallajama201.github.io/Challenge-04-Web-APIs/
+The website is live on the open web and can be accessed at https://abdallajama201.github.io/Web-APIs/
 
 Users can begin the quiz by pressing the start button. This will start the timer and present the first question. A user can select from four options. When an option is selected the next question is presented. The user is also shown if the previous answer is correct or incorrect underneath the question. If the previous question was answered incorrectly ten seconds is reduced from the time remaining. After the last question or when the timer hits zero the user is presented with their score and an opportunity to record their initials and final score.
  
